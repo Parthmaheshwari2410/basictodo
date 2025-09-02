@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { cancelEdit, deleteTodo, editTodo, setEditing, toggleTodo } from '../redux/action';
-
+import { deleteTodo, editTodo, setEditing, toggleTodo } from '../redux/action';
 
 export function EditTodo({ todo }) {
     const dispatch = useDispatch();
@@ -18,38 +17,28 @@ export function EditTodo({ todo }) {
         const trimmedText = editText.trim();
         if (trimmedText) {
             dispatch(editTodo(todo.id, trimmedText));
+            dispatch(setEditing(null))
         } else {
-            dispatch(cancelEdit());
+            dispatch(setEditing(null));
         }
-    };
-
-    const handleCancel = () => {
-        dispatch(cancelEdit());
-        setEditText(todo.text);
     };
 
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
             handleSave();
-        } else if (e.key === 'Escape') {
-            handleCancel();
         }
     };
 
     return (
-        <div className={`flex items-center gap-4 p-4 mb-3 rounded-lg transition-all hover:translate-x-2 hover:shadow-lg border-l-4 `}>
+        <div className={`flex items-center gap-4 p-4 mb-3 rounded-lg transition-all  border-l-4 `}>
             <input type="checkbox" className="w-5 h-5 cursor-pointer accent-blue-500" checked={todo.completed} onChange={() => dispatch(toggleTodo(todo.id))}
             />
 
             {isEditing ? (
-                <> <input type="text" className="flex-1 p-2 border-2 border-blue-400 dark:border-blue-500 rounded text-base bg-white dark:bg-gray-600 text-gray-900 dark:text-white" value={editText} onChange={(e) => setEditText(e.target.value)} onKeyDown={handleKeyPress}
+                <> <input type="text" className="flex-1 p-2 border-2 border-blue-400 dark:border-blue-500 rounded text-base bg-white dark:bg-gray-600 text-gray-900 dark:text-white" value={editText} onChange={(e) => setEditText(e.target.value)} onKeyDown={handleKeyPress} autoFocus
                 />
-                    <button className="px-3 py-2  text-white rounded text-xs font-bold hover:-translate-y-1 transition-transform"
-                        onClick={handleSave} > Save
-                    </button>
-                    <button className="px-3 py-2 text-white rounded text-xs font-bold hover:-translate-y-1 transition-transform"
-                        onClick={handleCancel} > Cancel</button>
-                </>
+                    <button className="px-3 py-2  text-white bg-amber-600 rounded text-xs font-bold hover:-translate-y-1 transition-transform"
+                        onClick={handleSave} >Save</button> </>
             ) : (
                 <><span className={`flex-1 text-base transition-all text-gray-900 dark:text-white ${todo.completed ? 'line-through text-gray-500 dark:text-gray-400' : ''
                     }`}> {todo.text}  </span>
